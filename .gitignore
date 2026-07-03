@@ -1,0 +1,22 @@
+# Environment files with secrets — never commit these
+.env
+go-api/.env
+node-api/.env
+frontend/.env
+
+# Go build artifacts
+go-api/server
+
+# Node.js dependencies
+node-api/node_modules/
+frontend/node_modules/
+
+# Vite build output
+frontend/dist/
+
+# OS and IDE noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
