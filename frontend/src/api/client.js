@@ -2,7 +2,13 @@
  * Thin API client wrapping fetch with auth header injection and uniform error handling.
  * All functions throw an Error with a human-readable message on failure so React
  * components can display them without knowing HTTP status codes.
+ *
+ * VITE_API_BASE_URL: when set (e.g. in Vercel), requests go to that origin.
+ * When empty (local dev / Docker), relative URLs are used so Vite proxy / nginx handle routing.
  */
+
+/** Base URL prefix — empty string means "same origin" (dev/Docker). */
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
 
 /** @returns {string | null} JWT stored in sessionStorage, or null if not logged in. */
 function getToken() {
@@ -30,7 +36,7 @@ export function isAuthenticated() {
  * @returns {Promise<void>}
  */
 export async function login(username, password) {
-  const res = await fetch('/api/v1/auth/login', {
+  const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
@@ -56,7 +62,7 @@ export async function decomposeQR(matrix) {
   const token = getToken();
   if (!token) throw new Error('not authenticated');
 
-  const res = await fetch('/api/v1/qr-decompose', {
+  const res = await fetch(`${API_BASE}/api/v1/qr-decompose`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
